@@ -9,7 +9,7 @@ namespace Mlshinon
         public static MySqlConnection Connect(string? cs = null)
         {
             var connStr = string.IsNullOrWhiteSpace(cs)
-                ? "server=127.0.0.1;uid=root;database=test"
+                ? "server=127.0.0.1;uid=root;database=malshinon"
                 : cs;
 
             var conn = new MySqlConnection(connStr);
@@ -18,6 +18,7 @@ namespace Mlshinon
         }
 
         public static void Disconnect(MySqlConnection conn) => conn.Close();
+
         public static MySqlCommand Command(string sql, Parameter[] prms)
         {
             var cmd = new MySqlCommand { CommandText = sql };
@@ -25,11 +26,13 @@ namespace Mlshinon
                 cmd.Parameters.AddWithValue(p.parameter, p.parameterValue);
             return cmd;
         }
+
         private static MySqlDataReader Send(MySqlConnection conn, MySqlCommand cmd)
         {
             cmd.Connection = conn;
             return cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection);
         }
+
         private static List<Dictionary<string, object?>> Parse(MySqlDataReader rdr)
         {
             var rows = new List<Dictionary<string, object?>>();
@@ -47,6 +50,7 @@ namespace Mlshinon
             }
             return rows;
         }
+
         public static List<Dictionary<string, object?>> Execute(
             string sql,
             Parameter[] prms,
